@@ -6,7 +6,7 @@
 /*   By: jvan-kra <jvan-kra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 16:00:40 by jvan-kra          #+#    #+#             */
-/*   Updated: 2021/11/10 15:44:06 by jvan-kra         ###   ########.fr       */
+/*   Updated: 2021/11/10 15:57:04 by jvan-kra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include <dlfcn.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include "get_next_line.h"
+#include "../get_next_line.h"
 
 int g_free_count;
 int	g_malloc_count;
@@ -81,10 +81,7 @@ int	main(void)
 		my_test();
 		if (PRINT_ON)printf("\n-----  result times malloc=%d free=%d -----\n\n", g_malloc_count, g_free_count);
 		if (g_malloc_count != g_free_count)
-		{
-			// printf(COLOR_RED "ERRORERRORERROR\n" COLOR_RESET);
 			exit(1);
-		}
 		g_malloc_target++;
 	}
 	return (0);
