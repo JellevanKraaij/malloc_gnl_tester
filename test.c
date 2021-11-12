@@ -6,7 +6,7 @@
 /*   By: jvan-kra <jvan-kra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 16:00:40 by jvan-kra          #+#    #+#             */
-/*   Updated: 2021/11/10 15:57:04 by jvan-kra         ###   ########.fr       */
+/*   Updated: 2021/11/12 19:14:27 by jvan-kra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include "../get_next_line.h"
 
+int g_malloc_failed;
 int g_free_count;
 int	g_malloc_count;
 int	g_malloc_target;
@@ -36,8 +37,10 @@ void	*malloc(size_t size)
 	if (g_malloc_count + 1 >= g_malloc_target)
 	{
 		if (PRINT_ON)printf(COLOR_YELLOW "\nmalloc fail" COLOR_RESET);
+		g_malloc_failed = 1;
 		return (NULL);
 	}
+	g_malloc_failed = 0;
 	g_malloc_count++;
 	res = real_malloc(size);
 	if (PRINT_ON)printf(COLOR_YELLOW "\nmalloc %p %lu" COLOR_RESET, res, size);
@@ -59,13 +62,19 @@ void	free(void *to_free)
 
 void	my_test(void)
 {
+	void	*(*real_free)(void *) = dlsym(RTLD_NEXT, "free");
 	int		test = open(FILE_NAME, O_RDONLY);
 	char	*res = (char *)1;
-
+	
 	while (res != NULL)
 	{
 		res = get_next_line(test);
 		if (PRINT_ON)printf("\n\"" COLOR_GREEN"%s"COLOR_RESET "\"", res);
+		if (g_malloc_failed && res != NULL)
+		{
+			if (PRINT_ON)printf("\n" COLOR_RED"ERROR malloc failed but function doesnt return NULL"COLOR_RESET);
+			exit(1);
+		}
 		free(res);
 	}
 	close(test);
