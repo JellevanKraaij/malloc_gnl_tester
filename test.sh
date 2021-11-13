@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEBUG=1;
+DEBUG=0;
 
 for i in $(seq 1 5) $(seq 10 10 100)
 do
